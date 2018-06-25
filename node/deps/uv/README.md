@@ -169,6 +169,12 @@ $ make check
 $ make install
 ```
 
+To build with GYP, first run:
+
+```bash
+$ git clone https://chromium.googlesource.com/external/gyp build/gyp
+```
+
 ### Windows
 
 Prerequisites:
@@ -267,7 +273,14 @@ Make sure that you specify the architecture you wish to build for in the
 Run:
 
 ```bash
-$ source ./android-configure NDK_PATH gyp
+$ source ./android-configure NDK_PATH gyp [API_LEVEL]
+$ make -C out
+```
+
+The default API level is 24, but a different one can be selected as follows:
+
+```bash
+$ source ./android-configure ~/android-ndk-r15b gyp 21
 $ make -C out
 ```
 

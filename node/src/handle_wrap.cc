@@ -20,11 +20,8 @@
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "handle_wrap.h"
-#include "async-wrap.h"
-#include "async-wrap-inl.h"
-#include "env.h"
+#include "async_wrap-inl.h"
 #include "env-inl.h"
-#include "util.h"
 #include "util-inl.h"
 #include "node.h"
 
@@ -96,13 +93,7 @@ HandleWrap::HandleWrap(Environment* env,
       handle_(handle) {
   handle_->data = this;
   HandleScope scope(env->isolate());
-  Wrap(object, this);
   env->handle_wrap_queue()->PushBack(this);
-}
-
-
-HandleWrap::~HandleWrap() {
-  CHECK(persistent().IsEmpty());
 }
 
 
@@ -122,8 +113,6 @@ void HandleWrap::OnClose(uv_handle_t* handle) {
   if (have_close_callback)
     wrap->MakeCallback(env->onclose_string(), 0, nullptr);
 
-  ClearWrap(wrap->object());
-  wrap->persistent().Reset();
   delete wrap;
 }
 

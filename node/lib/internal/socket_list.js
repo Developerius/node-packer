@@ -1,5 +1,7 @@
 'use strict';
 
+const { ERR_CHILD_CLOSED_BEFORE_REPLY } = require('internal/errors').codes;
+
 const EventEmitter = require('events');
 
 // This object keeps track of the sockets that are sent
@@ -8,6 +10,7 @@ class SocketListSend extends EventEmitter {
     super();
     this.key = key;
     this.child = child;
+    child.once('exit', () => this.emit('exit', this));
   }
 
   _request(msg, cmd, callback) {
@@ -18,7 +21,7 @@ class SocketListSend extends EventEmitter {
 
     function onclose() {
       self.child.removeListener('internalMessage', onreply);
-      callback(new Error('child closed before reply'));
+      callback(new ERR_CHILD_CLOSED_BEFORE_REPLY());
     }
 
     function onreply(msg) {
@@ -102,4 +105,4 @@ class SocketListReceive extends EventEmitter {
   }
 }
 
-module.exports = {SocketListSend, SocketListReceive};
+module.exports = { SocketListSend, SocketListReceive };

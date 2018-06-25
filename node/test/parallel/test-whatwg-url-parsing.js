@@ -7,11 +7,11 @@ if (!common.hasIntl) {
 }
 
 const URL = require('url').URL;
-const path = require('path');
 const assert = require('assert');
+const fixtures = require('../common/fixtures');
 
 // Tests below are not from WPT.
-const tests = require(path.join(common.fixturesDir, 'url-tests'));
+const tests = require(fixtures.path('url-tests'));
 const failureTests = tests.filter((test) => test.failure).concat([
   { input: '' },
   { input: 'test' },
@@ -22,11 +22,13 @@ const failureTests = tests.filter((test) => test.failure).concat([
   { input: null },
   { input: new Date() },
   { input: new RegExp() },
+  { input: 'test', base: null },
+  { input: 'http://nodejs.org', base: null },
   { input: () => {} }
 ]);
 
 const expectedError = common.expectsError(
-  { code: 'ERR_INVALID_URL', type: TypeError }, 102);
+  { code: 'ERR_INVALID_URL', type: TypeError }, failureTests.length);
 
 for (const test of failureTests) {
   assert.throws(
@@ -36,7 +38,7 @@ for (const test of failureTests) {
         return false;
 
       // The input could be processed, so we don't do strict matching here
-      const match = (error + '').match(/Invalid URL: (.*)$/);
+      const match = (`${error}`).match(/Invalid URL: (.*)$/);
       if (!match) {
         return false;
       }
@@ -44,8 +46,8 @@ for (const test of failureTests) {
     });
 }
 
-const additional_tests = require(
-  path.join(common.fixturesDir, 'url-tests-additional.js'));
+const additional_tests =
+  require(fixtures.path('url-tests-additional.js'));
 
 for (const test of additional_tests) {
   const url = new URL(test.url);

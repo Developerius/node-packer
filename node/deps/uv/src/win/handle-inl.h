@@ -35,7 +35,6 @@
 #endif
 // --------- [Enclose.IO Hack end] ---------
 
-
 #define DECREASE_ACTIVE_COUNT(loop, handle)                             \
   do {                                                                  \
     if (--(handle)->activecnt == 0 &&                                   \

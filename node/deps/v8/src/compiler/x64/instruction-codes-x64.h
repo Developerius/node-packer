@@ -56,6 +56,7 @@ namespace compiler {
   V(X64Tzcnt32)                    \
   V(X64Popcnt)                     \
   V(X64Popcnt32)                   \
+  V(LFence)                        \
   V(SSEFloat32Cmp)                 \
   V(SSEFloat32Add)                 \
   V(SSEFloat32Sub)                 \
@@ -143,10 +144,29 @@ namespace compiler {
   V(X64Inc32)                      \
   V(X64Push)                       \
   V(X64Poke)                       \
+  V(X64Peek)                       \
   V(X64StackCheck)                 \
+  V(X64F32x4Splat)                 \
+  V(X64F32x4ExtractLane)           \
+  V(X64F32x4ReplaceLane)           \
+  V(X64F32x4Abs)                   \
+  V(X64F32x4Neg)                   \
+  V(X64F32x4RecipApprox)           \
+  V(X64F32x4RecipSqrtApprox)       \
+  V(X64F32x4Add)                   \
+  V(X64F32x4AddHoriz)              \
+  V(X64F32x4Sub)                   \
+  V(X64F32x4Mul)                   \
+  V(X64F32x4Min)                   \
+  V(X64F32x4Max)                   \
+  V(X64F32x4Eq)                    \
+  V(X64F32x4Ne)                    \
+  V(X64F32x4Lt)                    \
+  V(X64F32x4Le)                    \
   V(X64I32x4Splat)                 \
   V(X64I32x4ExtractLane)           \
   V(X64I32x4ReplaceLane)           \
+  V(X64I32x4Neg)                   \
   V(X64I32x4Shl)                   \
   V(X64I32x4ShrS)                  \
   V(X64I32x4Add)                   \
@@ -157,12 +177,17 @@ namespace compiler {
   V(X64I32x4MaxS)                  \
   V(X64I32x4Eq)                    \
   V(X64I32x4Ne)                    \
+  V(X64I32x4GtS)                   \
+  V(X64I32x4GeS)                   \
   V(X64I32x4ShrU)                  \
   V(X64I32x4MinU)                  \
   V(X64I32x4MaxU)                  \
+  V(X64I32x4GtU)                   \
+  V(X64I32x4GeU)                   \
   V(X64I16x8Splat)                 \
   V(X64I16x8ExtractLane)           \
   V(X64I16x8ReplaceLane)           \
+  V(X64I16x8Neg)                   \
   V(X64I16x8Shl)                   \
   V(X64I16x8ShrS)                  \
   V(X64I16x8Add)                   \
@@ -175,14 +200,19 @@ namespace compiler {
   V(X64I16x8MaxS)                  \
   V(X64I16x8Eq)                    \
   V(X64I16x8Ne)                    \
+  V(X64I16x8GtS)                   \
+  V(X64I16x8GeS)                   \
   V(X64I16x8ShrU)                  \
   V(X64I16x8AddSaturateU)          \
   V(X64I16x8SubSaturateU)          \
   V(X64I16x8MinU)                  \
   V(X64I16x8MaxU)                  \
+  V(X64I16x8GtU)                   \
+  V(X64I16x8GeU)                   \
   V(X64I8x16Splat)                 \
   V(X64I8x16ExtractLane)           \
   V(X64I8x16ReplaceLane)           \
+  V(X64I8x16Neg)                   \
   V(X64I8x16Add)                   \
   V(X64I8x16AddSaturateS)          \
   V(X64I8x16Sub)                   \
@@ -191,10 +221,14 @@ namespace compiler {
   V(X64I8x16MaxS)                  \
   V(X64I8x16Eq)                    \
   V(X64I8x16Ne)                    \
+  V(X64I8x16GtS)                   \
+  V(X64I8x16GeS)                   \
   V(X64I8x16AddSaturateU)          \
   V(X64I8x16SubSaturateU)          \
   V(X64I8x16MinU)                  \
   V(X64I8x16MaxU)                  \
+  V(X64I8x16GtU)                   \
+  V(X64I8x16GeU)                   \
   V(X64S128And)                    \
   V(X64S128Or)                     \
   V(X64S128Xor)                    \
@@ -234,8 +268,6 @@ namespace compiler {
   V(M4I)  /* [      %r2*4 + K] */      \
   V(M8I)  /* [      %r2*8 + K] */      \
   V(Root) /* [%root       + K] */
-
-enum X64MemoryProtection { kUnprotected = 0, kProtected = 1 };
 
 }  // namespace compiler
 }  // namespace internal

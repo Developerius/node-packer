@@ -1,14 +1,13 @@
 'use strict';
 
+const {
+  ERR_STDERR_CLOSE,
+  ERR_STDOUT_CLOSE,
+  ERR_UNKNOWN_STDIN_TYPE,
+  ERR_UNKNOWN_STREAM_TYPE
+} = require('internal/errors').codes;
+
 exports.setup = setupStdio;
-
-var errors;
-
-function lazyErrors() {
-  if (!errors)
-    errors = require('internal/errors');
-  return errors;
-}
 
 function setupStdio() {
   var stdin;
@@ -20,9 +19,8 @@ function setupStdio() {
     stdout = createWritableStdioStream(1);
     stdout.destroySoon = stdout.destroy;
     stdout._destroy = function(er, cb) {
-      // avoid errors if we already emitted
-      const errors = lazyErrors();
-      er = er || new errors.Error('ERR_STDOUT_CLOSE');
+      // Avoid errors if we already emitted
+      er = er || new ERR_STDOUT_CLOSE();
       cb(er);
     };
     if (stdout.isTTY) {
@@ -36,9 +34,8 @@ function setupStdio() {
     stderr = createWritableStdioStream(2);
     stderr.destroySoon = stderr.destroy;
     stderr._destroy = function(er, cb) {
-      // avoid errors if we already emitted
-      const errors = lazyErrors();
-      er = er || new errors.Error('ERR_STDERR_CLOSE');
+      // Avoid errors if we already emitted
+      er = er || new ERR_STDERR_CLOSE();
       cb(er);
     };
     if (stderr.isTTY) {
@@ -95,8 +92,7 @@ function setupStdio() {
 
       default:
         // Probably an error on in uv_guess_handle()
-        const errors = lazyErrors();
-        throw new errors.Error('ERR_UNKNOWN_STDIN_TYPE');
+        throw new ERR_UNKNOWN_STDIN_TYPE();
     }
 
     // For supporting legacy API we put the FD here.
@@ -162,7 +158,7 @@ function createWritableStdioStream(fd) {
       break;
 
     case 'FILE':
-      var fs = require('internal/fs');
+      var fs = require('internal/fs/utils');
       stream = new fs.SyncWriteStream(fd, { autoClose: false });
       stream._type = 'fs';
       break;
@@ -180,8 +176,7 @@ function createWritableStdioStream(fd) {
 
     default:
       // Probably an error on in uv_guess_handle()
-      const errors = lazyErrors();
-      throw new errors.Error('ERR_UNKNOWN_STREAM_TYPE');
+      throw new ERR_UNKNOWN_STREAM_TYPE();
   }
 
   // For supporting legacy API we put the FD here.
